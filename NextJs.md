@@ -273,3 +273,121 @@ With this understanding of hydration, you can explore its implementation using R
 - With its modern App Router, it fully embraces React's latest advancements, making it the ideal choice for new projects.
 - Legacy Pages Router remains relevant for older applications but lacks modern capabilities.
 - In the next step, we'll set up our first Next.js project to explore these features in depth.
+
+
+---
+---
+
+# 4- React Server Components 
+
+## Overview
+
+In this lecture, we learn about **React Server Components** (RSC), a paradigm that changes the way we build React apps. RSC introduces server components, which are rendered on the server and have no client-side interactivity, reducing JavaScript on the client and speeding up rendering.
+
+## Why React Server Components?
+
+- **Traditional React Apps**: In client-side rendered React apps, the UI is a function of state, and the application re-renders as the state changes. This approach is great for interactivity but can have drawbacks:
+  - **Performance**: Large apps require a lot of JavaScript, which affects performance.
+  - **Client-Server Waterfall**: Multiple components may need to fetch data one after another, causing delays.
+
+- **Server-Side Rendering (SSR)**: In server-side rendered apps (like old PHP-based apps), data is fetched directly from the server, and the UI is rendered based on data (not state). This reduces the need for JavaScript and improves performance but sacrifices interactivity.
+
+### The Need for a Middle Ground
+
+React Server Components aim to combine the best of both worlds:
+1. **Server-Side Rendering** for performance (fetching data server-side with no client-side JavaScript).
+2. **Client-Side Interactivity** where necessary (with JavaScript-powered components for dynamic UIs).
+
+## What Are React Server Components?
+
+- **Server Components (RSC)**: These components are rendered only on the server, fetch data on the server, and do not ship JavaScript to the client.
+- **Client Components**: These components are interactive, render on the client, and are stateful. They can be thought of as traditional React components.
+
+### Key Features of React Server Components
+
+- **Server as First-Class Citizen**: React Server Components introduce the server as an integral part of the React app architecture, bridging the gap between the client and server.
+- **Client-Server Boundaries**: React defines clear boundaries where client and server components interact. The server components are rendered without client-side JavaScript, reducing the bundle size.
+
+### Client and Server Components Working Together
+
+React allows both client and server components to coexist. The **server components** handle static rendering (based on data) and do not interact with state, while the **client components** handle dynamic, interactive functionality.
+
+### Important Concepts
+
+- **Server Components**:
+  - Rendered only on the server.
+  - No interactivity or state.
+  - Great for rendering static UI and fetching data server-side.
+  - Require zero JavaScript in the client bundle.
+  
+- **Client Components**:
+  - Interactive and stateful.
+  - Rendered on the client.
+  - Handle dynamic interactions, like toggles and filters.
+  
+### Full-Stack React with Server Components
+
+React Server Components enable full-stack development within React itself. Components that require interactivity are client components, while others that fetch data and don’t need interactivity can be server components.
+
+### Activation of React Server Components
+
+React Server Components are not enabled by default in a new React app. Full-stack frameworks like **Next.js** or **Remix** implement RSC. In Next.js, the **app router** uses React Server Components as the default, and client components are opt-in.
+
+To use a client component in this setup, you need to add the `use client` directive at the top of the file.
+
+## Example: Client vs Server Components
+
+Here’s an example breakdown of the **Wild Oasis app** UI:
+
+1. **Server Components**: 
+   - Sidebar, Header, and Main (non-interactive, can be rendered on the server).
+   - Avatar (static data, fetched on the server).
+   - Cabin table (renders data fetched on the server).
+   
+2. **Client Components**: 
+   - DarkMode toggle, SortBy, and Filter (interactive, require JavaScript).
+   - Menu (client-side interaction needed).
+
+### Client-Server Boundary
+
+- Components can be either client or server, and React uses the `use client` directive to mark boundaries.
+- Components inside client components do not need the `use client` directive, as they inherit the client-side behavior.
+  
+## Comparison of Client and Server Components
+
+### Key Differences
+
+| Feature                          | Server Components                                  | Client Components                                  |
+|-----------------------------------|-----------------------------------------------------|-----------------------------------------------------|
+| **Rendering**                     | Only on the server                                  | Only on the client                                  |
+| **State**                         | Cannot be stateful                                  | Can be stateful                                     |
+| **Interactivity**                 | No interactivity (no JavaScript required)          | Interactive (requires JavaScript)                   |
+| **Data Fetching**                 | Fetches data directly from the server               | Fetches data via client-side mechanisms (e.g., React Query) |
+| **Re-renders**                    | Re-rendered when URL changes                        | Re-rendered when state or props change              |
+| **Props**                         | Can pass data to both server and client components  | Can only pass data to other client components       |
+| **Hooks**                         | Cannot use hooks                                    | Can use React hooks (e.g., useState, useEffect)      |
+
+### Key Considerations
+
+- **State Management**: Server components cannot use state or hooks. Client components handle the interactivity.
+- **Props Passing**: Props between client and server components must be serializable (cannot pass non-serializable data like functions or classes).
+- **Data Fetching**: Data fetching in server components is simpler (async/await at the top level). In client components, third-party libraries like React Query are used.
+
+### Re-renders in Server and Client Components
+
+- **Client Components**: Re-render when state or props change.
+- **Server Components**: Re-render when the URL changes (since they are dependent on the URL for rendering).
+
+### Importing Components
+
+- **Client Components** can only import other client components.
+- **Server Components** can import both client and server components, but **client components cannot import server components** once the client-server boundary is crossed.
+
+### When to Use React Server Components
+
+- Use **server components** for non-interactive UI elements, such as static data fetching and rendering.
+- Use **client components** for dynamic, interactive elements, such as forms, filters, and toggles.
+
+## Conclusion
+
+React Server Components allow for an efficient, hybrid approach to building React apps by handling both client and server-side code within the same React component architecture. This new paradigm helps optimize performance and interactivity in React applications, making them more suitable for real-world use cases that require both stateful interactivity and efficient data fetching.
